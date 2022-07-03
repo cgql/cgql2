@@ -1,5 +1,8 @@
 #pragma once
 
+#include "cgql2/ptr.h"
+
+#include <map>
 #include <vector>
 #include <string>
 
@@ -17,11 +20,11 @@ class Field final {
 public:
   void setName(std::string name) { this->name = name; }
   const std::string& getName() const { return this->name; }
-  void setFieldType(Type*);
-  Type* getFieldType() const;
+  void setFieldType(Ptr<Type>);
+  Ptr<Type> getFieldType() const;
 private:
   std::string name;
-  Type* fieldType;
+  Ptr<Type> fieldType;
 };
 
 class ObjectTypeAttributes final {
@@ -32,26 +35,44 @@ private:
   std::vector<Field> fields;
 };
 
+class ScalarTypeAttributes final {
+private:
+};
+
 class Type final {
 public:
   Type(
     std::string name,
     DefinitionType requiredType = DefinitionType::kUndefined
-  ) : name(name), requiredType(requiredType) {}
+  );
+  ~Type();
   const std::string& getName() const { return this->name; }
+  DefinitionType getDefinitionType() const { return this->definitionType; }
   void assign(const ObjectTypeAttributes&);
-  ObjectTypeAttributes* getObject() const;
+  void assign(const ScalarTypeAttributes&);
+
+  Ptr<ObjectTypeAttributes> getObject() const;
+  const ScalarTypeAttributes& getScalar() const;
 private:
   std::string name;
   DefinitionType definitionType = DefinitionType::kUndefined;
-  DefinitionType requiredType = DefinitionType::kUndefined;
 
   union {
-    ObjectTypeAttributes* object;
+    Ptr<ObjectTypeAttributes> object;
+    ScalarTypeAttributes scalar;
   } value = {};
 
 private:
   void allocateForType(DefinitionType);
+};
+
+class Schema {
+public:
+  Ptr<Type> getType(std::string name) const;
+  const auto& getAllTypes() const { return this->types; };
+  void addType(Ptr<Type>);
+private:
+  std::map<std::string, RAIIPtr<Type>> types;
 };
 
 }
