@@ -1,3 +1,4 @@
+#include "cgql2/printer.h"
 #include <cgql2/schema.h>
 
 #include <iostream>
@@ -5,20 +6,43 @@
 using namespace cgql2;
 
 int main() {
-  Type stringType("String", DefinitionType::kScalar);
-  Type queryType("Query", DefinitionType::kObject);
-  ObjectTypeAttributes object;
+  Schema schema;
+
+  Ptr<Type> stringType = makePtr<Type>("String", DefinitionType::kScalar);
+  schema.addType(stringType);
+
+  Ptr<Type> queryType = makePtr<Type>("Query", DefinitionType::kObject);
+  schema.addType(queryType);
+
+  Ptr<Type> personType = makePtr<Type>("Person", DefinitionType::kObject);
+  schema.addType(personType);
+
+  ObjectTypeAttributes queryObject;
+
+  Field personField;
+  personField.setName("person");
+  personField.setFieldType(schema.getType("Person"));
+
+  queryObject.addField(personField);
+
+  queryType->assign(queryObject);
+
+  ObjectTypeAttributes personObject;
 
   Field nameField;
   nameField.setName("name");
-  nameField.setFieldType(nullptr);
+  nameField.setFieldType(schema.getType("String"));
 
-  object.addField(nameField);
+  Field relationField;
+  relationField.setName("relation");
+  relationField.setFieldType(schema.getType("Person"));
 
-  queryType.assign(object);
+  personObject.addField(nameField);
+  personObject.addField(relationField);
 
-  std::cout << "Field name: " << nameField.getName() << "\n";
-  std::cout << "Object name: " << queryType.getName() << "\n";
+  personType->assign(personObject);
+
+  printSchema(schema);
 
   return 0;
 }
