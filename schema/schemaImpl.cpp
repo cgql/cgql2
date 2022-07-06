@@ -58,9 +58,8 @@ void Type::allocateForType(DefinitionType type) {
   this->definitionType = type;
 }
 
-Ptr<Type> Schema::getType(std::string name) const {
-  auto it = this->types.find(name);
-  return it->second.get();
+Ptr<Type> Schema::getType(std::string name) {
+  return this->types[name].get();
 }
 void Schema::addType(Ptr<Type> type) {
   this->types.try_emplace(type->getName(), type);

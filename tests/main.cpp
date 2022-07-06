@@ -1,4 +1,5 @@
-#include "cgql2/printer.h"
+#include <cgql2/parse.h>
+#include <cgql2/printer.h>
 #include <cgql2/schema.h>
 
 #include <iostream>
@@ -6,6 +7,11 @@
 using namespace cgql2;
 
 int main() {
+  std::string s = "type Query { person: Person }";
+  SchemaParser parser(s);
+  Schema schema1 = parser.parseSchema();
+  printSchema(schema1);
+
   Schema schema;
 
   Ptr<Type> stringType = makePtr<Type>("String", DefinitionType::kScalar);

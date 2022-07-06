@@ -17,6 +17,9 @@ target_include_directories(cgql2Source
 set(SOURCES
   schema/schemaImpl.cpp
   schema/printSchema.cpp
+  parser/lexer.cpp
+  parser/baseParser.cpp
+  parser/schemaParser.cpp
 )
 
 target_sources(cgql2Source PRIVATE ${SOURCES})

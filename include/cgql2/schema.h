@@ -68,7 +68,7 @@ private:
 
 class Schema {
 public:
-  Ptr<Type> getType(std::string name) const;
+  Ptr<Type> getType(std::string name);
   const auto& getAllTypes() const { return this->types; };
   void addType(Ptr<Type>);
 private:
