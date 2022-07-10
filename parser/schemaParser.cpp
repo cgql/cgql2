@@ -14,7 +14,8 @@ Field SchemaParser::parseField(Schema& schema) {
 
 void SchemaParser::parseObjectType(Schema& schema) {
   this->lexer.advance();
-  Ptr<Type> objectType = makePtr<Type>(this->parseName(), DefinitionType::kObject);
+  Type* objectType =
+    schema.registerType(this->parseName(), DefinitionType::kObject);
   if(this->peek(TokenType::CURLY_BRACES_L)) {
     this->lexer.advance();
     do {
@@ -22,7 +23,6 @@ void SchemaParser::parseObjectType(Schema& schema) {
     } while(!this->peek(TokenType::CURLY_BRACES_R));
     this->lexer.advance();
   }
-  schema.addType(objectType);
 }
 
 void SchemaParser::parseDefinition(Schema& schema) {

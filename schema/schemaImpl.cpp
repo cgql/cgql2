@@ -2,10 +2,10 @@
 
 namespace cgql2 {
 
-void Field::setFieldType(Ptr<Type> fieldType) {
+void Field::setFieldType(Type* fieldType) {
   this->fieldType = fieldType;
 }
-Ptr<Type> Field::getFieldType() const {
+Type* Field::getFieldType() const {
   return this->fieldType;
 }
 
@@ -25,7 +25,7 @@ Type::Type(
 Type::~Type() {
   switch(this->definitionType) {
     case DefinitionType::kObject:
-      this->value.object.destroy();
+      delete this->value.object;
       break;
     case DefinitionType::kScalar:
     case DefinitionType::kUndefined:
@@ -33,12 +33,12 @@ Type::~Type() {
   }
 }
 void Type::assign(const ObjectTypeAttributes& object) {
-  this->value.object.assign(object);
+  *this->value.object = object;
 }
 void Type::assign(const ScalarTypeAttributes& scalar) {
   this->value.scalar = scalar;
 }
-Ptr<ObjectTypeAttributes> Type::getObject() const {
+ObjectTypeAttributes* Type::getObject() const {
   return this->value.object;
 }
 const ScalarTypeAttributes& Type::getScalar() const {
@@ -58,11 +58,13 @@ void Type::allocateForType(DefinitionType type) {
   this->definitionType = type;
 }
 
-Ptr<Type> Schema::getType(std::string name) {
+Type* Schema::getType(std::string name) {
   return this->types[name].get();
 }
-void Schema::addType(Ptr<Type> type) {
-  this->types.try_emplace(type->getName(), type);
+Type* Schema::registerType(std::string name, DefinitionType defType) {
+  Type* type = new Type(name, defType);
+  this->types[name] = type;
+  return type;
 }
 
 }

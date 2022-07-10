@@ -20,11 +20,11 @@ class Field final {
 public:
   void setName(std::string name) { this->name = name; }
   const std::string& getName() const { return this->name; }
-  void setFieldType(Ptr<Type>);
-  Ptr<Type> getFieldType() const;
+  void setFieldType(Type*);
+  Type* getFieldType() const;
 private:
   std::string name;
-  Ptr<Type> fieldType;
+  Type* fieldType;
 };
 
 class ObjectTypeAttributes final {
@@ -51,14 +51,14 @@ public:
   void assign(const ObjectTypeAttributes&);
   void assign(const ScalarTypeAttributes&);
 
-  Ptr<ObjectTypeAttributes> getObject() const;
+  ObjectTypeAttributes* getObject() const;
   const ScalarTypeAttributes& getScalar() const;
 private:
   std::string name;
   DefinitionType definitionType = DefinitionType::kUndefined;
 
   union {
-    Ptr<ObjectTypeAttributes> object;
+    ObjectTypeAttributes* object;
     ScalarTypeAttributes scalar;
   } value = {};
 
@@ -68,9 +68,9 @@ private:
 
 class Schema {
 public:
-  Ptr<Type> getType(std::string name);
+  Type* getType(std::string name);
   const auto& getAllTypes() const { return this->types; };
-  void addType(Ptr<Type>);
+  Type* registerType(std::string, DefinitionType);
 private:
   std::map<std::string, RAIIPtr<Type>> types;
 };

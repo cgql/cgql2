@@ -1,7 +1,5 @@
 #include "cgql2/lexer.h"
 
-#include <iostream>
-
 namespace cgql2 {
 
 Token genToken(TokenType type, std::string value = "") {

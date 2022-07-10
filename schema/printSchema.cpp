@@ -16,16 +16,17 @@ static void printDefinitionType(DefinitionType definitionType) {
   }
 }
 
-static void printType(Ptr<Type>);
+static void printType(Type*);
 
-static void printObject(Ptr<ObjectTypeAttributes> object) {
+static void printObject(ObjectTypeAttributes* object) {
   for(auto field : object->getFields()) {
     std::cout << "  " << field.getName() << " " <<
-      field.getFieldType()->getName() << "\n";
+      (field.getFieldType() ?  field.getFieldType()->getName()
+        : "<incomplete-type>") << "\n";
   }
 }
 
-static void printType(Ptr<Type> type) {
+static void printType(Type* type) {
   switch(type->getDefinitionType()) {
     case DefinitionType::kObject:
       printObject(type->getObject()); break;
@@ -36,8 +37,12 @@ static void printType(Ptr<Type> type) {
 void printSchema(const cgql2::Schema& schema) {
   for(auto const& [typeName, type] : schema.getAllTypes()) {
     std::cout << typeName << " ";
+    if(!type.get()) {
+      std::cout << "<incomplete-type>\n";
+      continue;
+    }
     printDefinitionType(type->getDefinitionType());
-    printType(type);
+    printType(type.get());
   }
 }
 
