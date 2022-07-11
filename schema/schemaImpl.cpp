@@ -58,6 +58,10 @@ void Type::allocateForType(DefinitionType type) {
   this->definitionType = type;
 }
 
+Schema::Schema() {
+  this->registerType("Int", DefinitionType::kScalar);
+}
+
 Type* Schema::getType(std::string name) {
   return this->types[name].get();
 }

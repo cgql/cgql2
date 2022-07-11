@@ -68,6 +68,7 @@ private:
 
 class Schema {
 public:
+  Schema();
   Type* getType(std::string name);
   const auto& getAllTypes() const { return this->types; };
   Type* registerType(std::string, DefinitionType);

@@ -32,46 +32,11 @@ private:
 
 int main() {
   {
-    Timer t("50000");
-    for(int i = 0; i < 50000; i++) {
-      std::string s = "type Person { name: String } type Query { person: Person }";
-      SchemaParser parser(s);
-      Schema schema1 = parser.parseSchema();
-    }
+    std::string s = "type Query { number: Int }";
+    SchemaParser parser(s);
+    Schema schema1 = parser.parseSchema();
+    printSchema(schema1);
   }
-
-  Schema schema;
-
-  Type* stringType = schema.registerType("String", DefinitionType::kScalar);
-  Type* queryType = schema.registerType("Query", DefinitionType::kObject);
-  Type* personType = schema.registerType("Person", DefinitionType::kObject);
-
-  ObjectTypeAttributes queryObject;
-
-  Field personField;
-  personField.setName("person");
-  personField.setFieldType(schema.getType("Person"));
-
-  queryObject.addField(personField);
-
-  queryType->assign(queryObject);
-
-  ObjectTypeAttributes personObject;
-
-  Field nameField;
-  nameField.setName("name");
-  nameField.setFieldType(schema.getType("String"));
-
-  Field relationField;
-  relationField.setName("relation");
-  relationField.setFieldType(schema.getType("Person"));
-
-  personObject.addField(nameField);
-  personObject.addField(relationField);
-
-  personType->assign(personObject);
-
-  printSchema(schema);
 
   return 0;
 }
