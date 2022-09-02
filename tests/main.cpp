@@ -1,3 +1,4 @@
+#include "cgql2/query.h"
 #include <cgql2/parse.h>
 #include <cgql2/printer.h>
 #include <cgql2/schema.h>
@@ -36,6 +37,13 @@ int main() {
     SchemaParser parser(s);
     Schema schema1 = parser.parseSchema();
     printSchema(schema1);
+  }
+
+  {
+    std::string q = "{ person { name age } }";
+    DocumentParser parser(q);
+    Document doc = parser.parseQuery();
+    printQuery(doc);
   }
 
   return 0;

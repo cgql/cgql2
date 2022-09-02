@@ -15,11 +15,14 @@ target_include_directories(cgql2Source
 )
 
 set(SOURCES
+  query/query.cpp
+  query/printQuery.cpp
   schema/schemaImpl.cpp
   schema/printSchema.cpp
   parser/lexer.cpp
   parser/baseParser.cpp
   parser/schemaParser.cpp
+  parser/documentParser.cpp
 )
 
 target_sources(cgql2Source PRIVATE ${SOURCES})
